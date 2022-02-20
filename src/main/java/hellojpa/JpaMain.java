@@ -6,14 +6,14 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
 
-public class JpaMain {
-    public static void main(String[] args) {
+        public class JpaMain {
+            public static void main(String[] args) {
 //      애플리케이션 로딩 시점에 한 개만 생성되어야 한다.
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+                EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
 //      실제 DB에 접근하는, 트랜잭션 단위가 실행되면, 쿼리를 날릴때마다 만들어줘야함
 //      한번 사용하고 나면 반드시 닫아줘야한다.
-        EntityManager em = emf.createEntityManager();
+                EntityManager em = emf.createEntityManager();
 
         EntityTransaction tx = em.getTransaction();
         tx.begin(); // 트랜잭션 시작
