@@ -1,9 +1,6 @@
 package hellojpa;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity // JPA가 관리할 객체 지정
 @Table(name = "JpaMember")
@@ -12,7 +9,45 @@ sequenceName = "MEMBER_SEQ",
 initialValue = 1, allocationSize = 50)
 public class Member {
 
-    @Id // PK를 알려줌
+    @Id @GeneratedValue
+    @Column(name = "MEMBER_ID")
+    private Long id;
+
+    @Column(name = "USERNAME")
+    private String name;
+
+    /*@Column(name = "TEAM_ID")
+    private Long teamId;*/
+
+    @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+   /* @Id // PK를 알려줌
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MYSEQ") // DB의 방언에 맞게 id 값을 자동으로 생성한다. @GeneratedValue가 없으면 id값은 우리가 넣어주어야 한다.
     private Long id;
 
@@ -33,7 +68,7 @@ public class Member {
 
     public void setUsername(String username) {
         this.username = username;
-    }
+    }*/
 
     /*private Integer age; // int형은 not null까지, Integer은 null 허용
 
