@@ -4,10 +4,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
-        public class JpaMain {
-            public static void main(String[] args) {
+public class JpaMain {
+    public static void main(String[] args) {
 //      애플리케이션 로딩 시점에 한 개만 생성되어야 한다.
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
@@ -36,13 +35,25 @@ import java.util.List;
             /*Member findMember = em.find(Member.class, 1L);
             findMember.setName("memberA"); // 수정, 커밋되기 전 변경된 사항이 있으면 JPA가 알아서 Update 쿼리를 날린다.*/
 
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
+            /*List<Member> result = em.createQuery("select m from Member as m", Member.class)
                     .setFirstResult(1)
                     .setMaxResults(2)
                     .getResultList();
             for (Member member : result) {
                 System.out.println("member = " + member.getName());
-            }
+            }*/
+
+            Member member1 = new Member();
+            member1.setUsername("D");
+            Member member2 = new Member();
+            member2.setUsername("E");
+            Member member3 = new Member();
+            member3.setUsername("F");
+
+            em.persist(member1);
+            em.persist(member2);
+            em.persist(member3);
+
             tx.commit();
         }catch (Exception e){
             tx.rollback();
