@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "SHOP_MEMBER")
@@ -15,6 +16,9 @@ public class Member {
     private String city;
 
     private String street;
+
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders;
 
     private String zipcode;
 
