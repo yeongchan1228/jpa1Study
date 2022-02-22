@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -55,19 +56,33 @@ public class JpaMain {
 //            em.persist(member3);
 
 
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
-
             Member member = new Member();
             member.setName("memberA");
-            member.setTeam(team);
             em.persist(member);
 
-            Member findMember = em.find(Member.class, member.getId());
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam = " + findTeam.getName());
+            Team team = new Team();
+            team.setName("TeamA");
+//            team.getMembers().add(member); // 오류 발생, 연관관계의 주인은 Member의 Team team 이다.
+            em.persist(team);
 
+            member.changeTeam(team);
+
+            em.flush();
+            em.clear();
+
+
+
+
+/*            양방향*/
+           /* Member findMember = em.find(Member.class, member.getId());
+//            Team findTeam = findMember.getTeam();
+//            System.out.println("findTeam = " + findTeam.getName());
+            List<Member> members = findMember.getTeam().getMembers(); // 양방향 설정
+
+            for (Member m : members) {
+                System.out.println("team_memberName = " + m.getName());
+            }
+*/
             tx.commit();
         }catch (Exception e){
             tx.rollback();

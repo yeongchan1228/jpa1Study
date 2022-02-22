@@ -43,8 +43,9 @@ public class Member {
         return team;
     }
 
-    public void setTeam(Team team) {
+    public void changeTeam(Team team) { // 연관관계 편의 메소드
         this.team = team;
+        team.getMembers().add(this); // 양방향 관계일 때 순수 자바 객체를 고려하여 setTeam을 할때 team 멤버에도 넣어주는 것이 좋다.
     }
 
    /* @Id // PK를 알려줌
