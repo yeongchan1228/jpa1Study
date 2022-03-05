@@ -3,11 +3,11 @@ package hellojpa;
 import javax.persistence.*;
 
 @Entity // JPA가 관리할 객체 지정
-@Table(name = "JpaMember")
+@Table(name = "HELLOMEMBER")
 @SequenceGenerator(name = "MYSEQ",
 sequenceName = "MEMBER_SEQ",
 initialValue = 1, allocationSize = 50)
-public class Member {
+public class HelloMember {
 
     @Id @GeneratedValue
     @Column(name = "MEMBER_ID")
@@ -21,7 +21,7 @@ public class Member {
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩
     @JoinColumn(name = "TEAM_ID")
-    private Team team;
+    private HelloTeam team;
 
     public Long getId() {
         return id;
@@ -39,11 +39,11 @@ public class Member {
         this.name = name;
     }
 
-    public Team getTeam() {
+    public HelloTeam getTeam() {
         return team;
     }
 
-    public void changeTeam(Team team) { // 연관관계 편의 메소드
+    public void changeTeam(HelloTeam team) { // 연관관계 편의 메소드
         this.team = team;
         team.getMembers().add(this); // 양방향 관계일 때 순수 자바 객체를 고려하여 setTeam을 할때 team 멤버에도 넣어주는 것이 좋다.
     }

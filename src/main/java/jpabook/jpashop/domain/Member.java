@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "SHOP_MEMBER")
+@Table(name = "MEMBER")
 public class Member {
 
     @Id @GeneratedValue()
@@ -16,6 +16,10 @@ public class Member {
     private String city;
 
     private String street;
+
+    /*@OneToOne
+    @JoinColumn(name = "LOKER_ID")
+    private Locker locker;*/
 
     @OneToMany(mappedBy = "member")
     private List<Order> orders;

@@ -4,9 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
-public class JpaMain {
+public class HelloJpaMain {
     public static void main(String[] args) {
 //      애플리케이션 로딩 시점에 한 개만 생성되어야 한다.
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
@@ -56,11 +55,11 @@ public class JpaMain {
 //            em.persist(member3);
 
 
-            Member member = new Member();
+            HelloMember member = new HelloMember();
             member.setName("memberA");
             em.persist(member);
 
-            Team team = new Team();
+            HelloTeam team = new HelloTeam();
             team.setName("TeamA");
 //            team.getMembers().add(member); // 오류 발생, 연관관계의 주인은 Member의 Team team 이다.
             em.persist(team);

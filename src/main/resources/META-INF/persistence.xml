@@ -16,8 +16,8 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>
-            <property name="hibernate.jdbc.batch_size" value="10"/>  <!-- 10개를 모아서 DB에 한번에 저장한다. -->
-            <property name="hibernate.hbm2ddl.auto" value="create"/> <!-- 데이터 베이스 스키마 자동 생성 테이블이 있으면 삭제 후 다시 생성 -->
+<!--            <property name="hibernate.jdbc.batch_size" value="10"/>  &lt;!&ndash; 10개를 모아서 DB에 한번에 저장한다. &ndash;&gt;-->
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/> <!-- 데이터 베이스 스키마 자동 생성 테이블이 있으면 삭제 후 다시 생성 -->
         </properties>
     </persistence-unit>
 </persistence>
