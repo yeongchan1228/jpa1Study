@@ -24,6 +24,7 @@ public class HelloMember extends HelloBaseEntity {
     private Locker locker;*/
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩
+    //@ManyToOne(fetch = FetchType.EAGER) // 즉시 로딩 -> HelloMember를 찾을 때 HelloTeam도 항상 같이 가져온다 -> Join
     @JoinColumn(name = "TEAM_ID")
     private HelloTeam team;
 

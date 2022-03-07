@@ -1,12 +1,15 @@
 package jpa;
 
+import jpa.hellojpa.Child;
 import jpa.hellojpa.HelloMember;
 import jpa.hellojpa.HelloTeam;
+import jpa.hellojpa.Parent;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -72,12 +75,56 @@ public class JpaMain {
              * 지연 로딩, 즉시 로딩 예제
              */
 
-            /*
-            HelloMember member = em.find(HelloMember.class, 1L);
+/*
+//            HelloMember member = em.find(HelloMember.class, 1L);
+//
+//            printMember(member); // 지연 로딩이 좋음
+//            printMemberAndTeam(member); // 즉시 로딩이 좋음
 
-            printMember(member); // 지연 로딩이 좋음
-            printMemberAndTeam(member); // 즉시 로딩이 좋음
-            */
+            HelloTeam team = new HelloTeam();
+            team.setName("TeamA");
+            em.persist(team);
+
+            HelloMember member = new HelloMember();
+            member.setName("UserA");
+            member.setTeam(team);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+//            HelloMember findMember = em.find(HelloMember.class, member.getId());
+//            System.out.println("m = " + findMember.getTeam().getClass()); // fetch = LAZY로 Team은 지연 로딩에 의해 프록시만 가져옴
+//
+//            System.out.println("=========================");
+//            findMember.getTeam().getName(); // Team의 무언가를 건드려야지 조회 쿼리가 나옴
+//            System.out.println("=========================");
+
+            //즉시 로딩의 JPQL N+1문제
+//            List<HelloMember> result = em.createQuery("select m from HelloMember m", HelloMember.class)
+//                                            .getResultList();
+            // SQL : select * from HelloMember -> 즉시 로딩은 HelloMember의 Team을 채워야 하기 때문에
+            // HelloMember 하나 당 HelloTeam을 찾기 위한 추가 SQL이 생성된다.
+            // 즉, HelloMember 전부를 찾는 SQL 1개, HelloMember당 Team을 찾기 위한 SQL N개
+            // 지연 로딩시 Team의 프록시를 가져옴. -> SQL 생성 X
+
+            // 이 문제를 해결하기 위해 join fetch 사용 -> SQL 하나로 team을 전부 채울 수 있다.
+            HelloTeam team2 = new HelloTeam();
+            team2.setName("TeamB");
+            em.persist(team2);
+
+            HelloMember member2 = new HelloMember();
+            member2.setName("UserB");
+            member2.setTeam(team2);
+            em.persist(member2);
+
+            em.flush();
+            em.clear();
+
+            List<HelloMember> result = em.createQuery("select m from HelloMember m join fetch m.team", HelloMember.class)
+                    .getResultList();
+*/
+
 
             /**
              * 프록시 예제
@@ -121,6 +168,54 @@ public class JpaMain {
             System.out.println("emf.getPersistenceUnitUtil().isLoaded() findReference2 = "
                     + emf.getPersistenceUnitUtil().isLoaded(findReference2)); // false 초기화가 안됐다.
                     */
+
+            /**
+             * cascade 예제
+             */
+
+            /*
+            Child child = new Child();
+            child.setName("ChildA");
+
+            Child child2= new Child();
+            child.setName("ChildB");
+
+            Parent parent = new Parent();
+            parent.setName("ParentA");
+            parent.addChild(child);
+            parent.addChild(child2);
+            em.persist(parent);
+            //em.persist(child); -> cascade를 적용하면 지워도 된다.
+            //em.persist(child2); -> cascade를 적용하면 persist를 안해도 된다.
+            */
+
+            /**
+             * 고아 삭제 예제
+             */
+
+            /*
+            Child child = new Child();
+            child.setName("ChildA");
+
+            Child child2= new Child();
+            child2.setName("ChildB");
+
+            Parent parent = new Parent();
+            parent.setName("ParentA");
+            parent.addChild(child);
+            parent.addChild(child2);
+            em.persist(parent);
+
+            em.flush();
+            em.clear();
+
+            Parent findParent = em.find(Parent.class, parent.getId());
+            findParent.getChildList().remove(0);
+
+            em.remove(findParent); // 부모를 죽이면 그 안의 자식도 다 죽는다. -> 사용에 주의
+            */
+
+            /* cascade나 orphanRemoval은 자식 엔티티를 본인만 참조하고 관리할 때 사용해야 한다. -> 나만 자식 엔티티를 참조해야 한다.*/
 
 
             tx.commit();
