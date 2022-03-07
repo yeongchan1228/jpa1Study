@@ -1,11 +1,12 @@
 package jpabook.jpashop.domain;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "MEMBER")
-public class Member {
+public class Member extends BaseEntity{
 
     @Id @GeneratedValue()
     @Column(name = "MEMBER_ID")
@@ -16,10 +17,6 @@ public class Member {
     private String city;
 
     private String street;
-
-    /*@OneToOne
-    @JoinColumn(name = "LOKER_ID")
-    private Locker locker;*/
 
     @OneToMany(mappedBy = "member")
     private List<Order> orders;

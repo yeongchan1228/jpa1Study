@@ -7,7 +7,7 @@ import javax.persistence.*;
 @SequenceGenerator(name = "MYSEQ",
 sequenceName = "MEMBER_SEQ",
 initialValue = 1, allocationSize = 50)
-public class HelloMember {
+public class HelloMember extends HelloBaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "MEMBER_ID")
@@ -18,6 +18,10 @@ public class HelloMember {
 
     /*@Column(name = "TEAM_ID")
     private Long teamId;*/
+
+    /*@OneToOne
+    @JoinColumn(name = "LOKER_ID")
+    private Locker locker;*/
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩
     @JoinColumn(name = "TEAM_ID")

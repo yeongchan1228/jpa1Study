@@ -1,4 +1,4 @@
-package jpabook.jpashop.domain;
+package hellojpa.inheritance;
 
 import javax.persistence.*;
 
@@ -13,5 +13,5 @@ public class Locker {
     private String name;
 
     /*@OneToOne(mappedBy = "locker")
-    private Member member;*/
+    private HelloMember member;*/
 }

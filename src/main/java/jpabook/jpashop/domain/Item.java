@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Item {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // 자식 테이블은 생성 안되고 부모에 DTYPE으로 들어감
+@DiscriminatorColumn // SINGLE_TABLE은 생략 가능
+public abstract class Item extends BaseEntity{
 
     @Id @GeneratedValue()
     @Column(name = "ITEM_ID")
@@ -19,6 +21,8 @@ public class Item {
 
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
+
+
 
     public Long getId() {
         return id;
