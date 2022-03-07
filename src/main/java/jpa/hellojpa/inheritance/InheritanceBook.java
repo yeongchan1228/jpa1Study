@@ -1,9 +1,9 @@
-package jpabook.jpashop.domain;
+package jpa.hellojpa.inheritance;
 
 import javax.persistence.Entity;
 
 @Entity
-public class Book extends Item{
+public class InheritanceBook extends InheritanceItem {
 
     private String author;
     private String isbn;

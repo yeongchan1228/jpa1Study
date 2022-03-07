@@ -1,4 +1,4 @@
-package hellojpa;
+package jpa.hellojpa;
 
 import javax.persistence.*;
 
@@ -159,4 +159,8 @@ public class HelloMember extends HelloBaseEntity {
     public void setDescriprion(String descriprion) {
         this.descriprion = descriprion;
     }*/
+
+    public void setTeam(HelloTeam team) {
+        this.team = team;
+    }
 }

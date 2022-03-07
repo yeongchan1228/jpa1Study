@@ -1,7 +1,6 @@
-package jpabook.jpashop.domain;
+package jpa.jpashop.domain;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class OrderItem extends BaseEntity {

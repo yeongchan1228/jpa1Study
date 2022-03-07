@@ -1,4 +1,4 @@
-package hellojpa;
+package jpa.hellojpa;
 
 public enum RoleType {
     USER, ADMIN

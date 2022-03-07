@@ -1,7 +1,6 @@
-package jpabook.jpashop.domain;
+package jpa.jpashop.domain;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -53,6 +52,14 @@ public class Member extends BaseEntity{
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public String getZipcode() {

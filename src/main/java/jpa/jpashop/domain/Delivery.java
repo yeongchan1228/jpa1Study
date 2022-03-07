@@ -1,4 +1,4 @@
-package jpabook.jpashop.domain;
+package jpa.jpashop.domain;
 
 import javax.persistence.*;
 

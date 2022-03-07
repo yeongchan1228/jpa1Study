@@ -1,4 +1,4 @@
-package hellojpa.inheritance;
+package jpa.hellojpa.inheritance;
 
 import javax.persistence.Entity;
 
