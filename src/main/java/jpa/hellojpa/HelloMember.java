@@ -1,6 +1,10 @@
 package jpa.hellojpa;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity // JPA가 관리할 객체 지정
 @Table(name = "HELLOMEMBER")
@@ -33,6 +37,30 @@ public class HelloMember extends HelloBaseEntity {
 
     @Embedded
     private Address homeAddress;
+
+    @ElementCollection // PK가 생기지 않아 데이터 변경시 구분할 수 없어 값 변경시 모든 데이터 다시 넣기 등이 이루어진다
+    // 따라서 1:N 매핑으로 풀어야 한다.
+    @CollectionTable(name = "FAVORITE_FOOD",
+            joinColumns = @JoinColumn(name = "MEMBER_ID")
+    ) // 매핑 정보
+    @Column(name = "FOOD")
+    private Set<String> favoriteFoods = new HashSet<>();
+
+    @ElementCollection // 컬렉션을 요소로 사용하기 위해 필요 -> 컬렉션은 테이블에 매핑될 수 없기 떄문에 따로 테이블을 만들어 줘야 한다.
+    @CollectionTable(name = "ADDRESS", // 컬렉션 요소를 담을 테이블 이름과 연관 요소인 MEMBER_ID -> 조인 컬럼을 넣어 준다.
+            joinColumns = @JoinColumn(name = "MEMBER_ID ")
+    )
+    private List<Address> addresseHistory = new ArrayList<>();
+
+    /**
+     * 값 타입 컬렉션 실무에서 적용하는 방법
+     * 1:N 방식으로 풀기
+     */
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true )
+     // cascade나 orphanRemoval를 해주는 이유는 외래키는
+    // EntityAddress에 존재하는데 이쪽에서 참조를 거는 것이므로 이쪽의 변경 사항이 저쪽에도 영향을 주게 하기 위해서
+    @JoinColumn(name = "MEMBER_ID")
+    private List<AddressEntity> addressHistory2 = new ArrayList<>();
 
     @Embedded
     @AttributeOverrides({@AttributeOverride(name = "city", column = @Column(name = "WORK_CITY")),
@@ -83,6 +111,30 @@ public class HelloMember extends HelloBaseEntity {
 
     public void setHomeAddress(Address homeAddress) {
         this.homeAddress = homeAddress;
+    }
+
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
+    }
+
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
+    }
+
+    public List<Address> getAddresseHistory() {
+        return addresseHistory;
+    }
+
+    public void setAddresseHistory(List<Address> addresseHistory) {
+        this.addresseHistory = addresseHistory;
+    }
+
+    public Address getWorkAddress() {
+        return workAddress;
+    }
+
+    public void setWorkAddress(Address workAddress) {
+        this.workAddress = workAddress;
     }
 
     /* @Id // PK를 알려줌

@@ -230,6 +230,35 @@ public class JpaMain {
             em.persist(member);
             */
 
+            /**
+             * 값 타입 예제
+             */
+
+            /*
+            HelloMember member = new HelloMember();
+            member.setName("HelloA");
+            member.setHomeAddress(new Address("city1", "street", "zipcode"));
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("피자");
+            member.getFavoriteFoods().add("족발");
+            member.getAddresseHistory().add(new Address("old1", "street", "zipcode"));
+            member.getAddresseHistory().add(new Address("old2", "street", "zipcode"));
+
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            HelloMember findMember = em.find(HelloMember.class, member.getId());
+
+            // 값 타입 변경 시에는 항상 새로운 객체로 갈아 끼워야 한다 -> 불변 객체이므로
+            findMember.getAddresseHistory()
+                    .remove(new Address("old1", "street", "zipcode")); // 해당 객체를 찾아서 지워 준다. 이때 Address에는 Override된 equals가 존재해야 한다.
+            findMember.getAddresseHistory()
+                            .add(new Address("new1", "street", "zipcode"));
+            // 이런 상황에서 jpa는 old2부터 new1까지 테이블에 다시 넣는다.
+            */
+
             tx.commit();
         }catch (Exception e){
             tx.rollback();
