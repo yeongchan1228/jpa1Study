@@ -28,6 +28,22 @@ public class HelloMember extends HelloBaseEntity {
     @JoinColumn(name = "TEAM_ID")
     private HelloTeam team;
 
+    @Embedded
+    private Period workPeriod;
+
+    @Embedded
+    private Address homeAddress;
+
+    @Embedded
+    @AttributeOverrides({@AttributeOverride(name = "city", column = @Column(name = "WORK_CITY")),
+            @AttributeOverride(name = "street", column = @Column(name = "WORK_STREET")),
+            @AttributeOverride(name = "zipcode", column = @Column(name = "WORK_ZIPCODE"))
+    })
+    private Address workAddress;
+
+    public HelloMember() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -53,7 +69,23 @@ public class HelloMember extends HelloBaseEntity {
         team.getMembers().add(this); // 양방향 관계일 때 순수 자바 객체를 고려하여 setTeam을 할때 team 멤버에도 넣어주는 것이 좋다.
     }
 
-   /* @Id // PK를 알려줌
+    public Period getWorkPeriod() {
+        return workPeriod;
+    }
+
+    public void setWorkPeriod(Period workPeriod) {
+        this.workPeriod = workPeriod;
+    }
+
+    public Address getHomeAddress() {
+        return homeAddress;
+    }
+
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
+    }
+
+    /* @Id // PK를 알려줌
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MYSEQ") // DB의 방언에 맞게 id 값을 자동으로 생성한다. @GeneratedValue가 없으면 id값은 우리가 넣어주어야 한다.
     private Long id;
 

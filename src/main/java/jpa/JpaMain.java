@@ -1,15 +1,11 @@
 package jpa;
 
-import jpa.hellojpa.Child;
 import jpa.hellojpa.HelloMember;
-import jpa.hellojpa.HelloTeam;
-import jpa.hellojpa.Parent;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -217,6 +213,22 @@ public class JpaMain {
 
             /* cascade나 orphanRemoval은 자식 엔티티를 본인만 참조하고 관리할 때 사용해야 한다. -> 나만 자식 엔티티를 참조해야 한다.*/
 
+            /**
+             * 임베디드 타입 예제
+             */
+
+            /*
+            HelloMember member = new HelloMember();
+            member.setName("helloA");
+
+            Address address = new Address();
+            address.setCity("hi");
+            address.setStreet("embedded");
+            address.setZipcode("good");
+            member.setHomeAddress(address);
+
+            em.persist(member);
+            */
 
             tx.commit();
         }catch (Exception e){
