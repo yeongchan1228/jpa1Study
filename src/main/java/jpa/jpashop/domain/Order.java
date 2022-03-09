@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "ORDERS")
+@Table(name = "ORDERS") // Order는 관례상 테이블 명을 ORDERS로 해주어야 한다.
 public class Order extends BaseEntity{
 
     @Id @GeneratedValue()

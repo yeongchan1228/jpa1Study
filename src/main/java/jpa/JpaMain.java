@@ -1,6 +1,7 @@
 package jpa;
 
 import jpa.hellojpa.HelloMember;
+import jpa.jpql.JpqlMember;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -21,6 +22,7 @@ public class JpaMain {
             /**
              * Inheritance 예제
              */
+
             /*
             InheritanceBook book = new Book();
             //자식 필드
@@ -299,7 +301,87 @@ public class JpaMain {
             }
             */
 
+            /**
+             * JPQL 실전 예제
+             */
+
+//            1.
+//            JpqlMember member = new JpqlMember();
+//            member.setUsername("memberA");
+//            member.setAge(10);
+//            em.persist(member);
+//
+//            // 반환 타입이 명확할 때 TypeQuery
+//            TypedQuery<JpqlMember> result1 = em.createQuery("select m from JpqlMember m", JpqlMember.class);
+//            // 반환 타입이 불명확할 때 Query
+//            Query result2 = em.createQuery("select m from JpqlMember m");
+//
+//            JpqlMember findMember = em.createQuery("select m from JpqlMember m where m.id = 1L", JpqlMember.class)
+//                    .getSingleResult(); // 결과가 무조건 하나 일 때, null이거나 여러 개면 에러가 발 -> 에러 체크를 해야 한다.
+//            // Spring Date JPA는 에러가 발생 X -> 맞춰서 코딩되어 있어 그냥 사용하면 된다.
+//            System.out.println("findMember.getUsername() = " + findMember.getUsername());
+//
+//            List<JpqlMember> result3 = em.createQuery("select m from JpqlMember m where m.username =: name", JpqlMember.class)
+//                    .setParameter("name", "memberA")
+//                    .getResultList();
+//            System.out.println("result3.get(0).getUsername() = " + result3.get(0).getUsername());
+
+//            2.
+//            JpqlTeam team = new JpqlTeam();
+//            team.setName("teamA");
+//            em.persist(team);
+//
+//            JpqlMember member = new JpqlMember();
+//            member.setUsername("memberA");
+//            member.setAge(10);
+//            member.setTeam(team);
+//            em.persist(member);
+//
+//            em.flush();
+//            em.clear();
+
+            // 여기서 불러온 결과 값은 영속성 컨텍스트에서 관리 된다.
+//            List<JpqlMember> result = em.createQuery("select m from JpqlMember m", JpqlMember.class)
+//                    .getResultList();
+
+//            List<JpqlTeam> result1  = em.createQuery("select m.team from JpqlMember m", JpqlTeam.class)
+//                    .getResultList(); // 이 방법은 묵시적이라 선호되지 않는다.
+//            List<JpqlTeam> result2 = em.createQuery("select t from JpqlMember m join m.team t", JpqlTeam.class)
+//                    .getResultList(); // 이 방법이 명시적이여서 선호된다.
+//            System.out.println("result1.get(0).getName() = " + result1.get(0).getName());
+//            System.out.println("result2.get(0).getName() = " + result2.get(0).getName());
+//
+//            // 값 타입도 잘 받을 수 있다.
+//            TypedQuery<Address> result3 = em.createQuery("select o.address from JpqlOrder o", Address.class);
+//            // 중복 제거
+//            TypedQuery<Address> result4 = em.createQuery("select distinct o.address from JpqlOrder o", Address.class);
+
+//            3. 여러 값 조회
+            JpqlMember member = new JpqlMember();
+            member.setUsername("memberA");
+            member.setAge(10);
+            em.persist(member);
+
+//            List result = em.createQuery("select m.username, m.age from JpqlMember m")
+//                    .getResultList();
+//            Object o = result.get(0);
+//            Object[] objects = (Object[]) o;
+//            for (Object object : objects) {
+//                System.out.println(object);
+//            }
+
+//            List<Object[]> result = em.createQuery("select m.username, m.age from JpqlMember m")
+//                    .getResultList();
+//            System.out.println("result = " + result.get(0));
+//            System.out.println("result = " + result.get(1));
+
+            // 이 방법이 많이 사용됨.
+            em.createQuery("select new jpa.jpql.MemberDto(m.username, m.age) from JpqlMember m")
+                    .getFirstResult();
+
+
             tx.commit();
+
         }catch (Exception e){
             tx.rollback();
         }finally {
