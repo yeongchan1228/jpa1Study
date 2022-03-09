@@ -1,7 +1,6 @@
 package jpa;
 
 import jpa.hellojpa.HelloMember;
-import jpa.jpql.JpqlMember;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -357,6 +356,7 @@ public class JpaMain {
 //            TypedQuery<Address> result4 = em.createQuery("select distinct o.address from JpqlOrder o", Address.class);
 
 //            3. 여러 값 조회
+            /*
             JpqlMember member = new JpqlMember();
             member.setUsername("memberA");
             member.setAge(10);
@@ -378,6 +378,131 @@ public class JpaMain {
             // 이 방법이 많이 사용됨.
             em.createQuery("select new jpa.jpql.MemberDto(m.username, m.age) from JpqlMember m")
                     .getFirstResult();
+            */
+//             4. 페이징
+            /*
+            JpqlMember member = new JpqlMember();
+            member.setUsername("memberA");
+            member.setAge(10);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            // 나이 순으로 정렬 후 10~30번 째만 가져오기
+            List<JpqlMember> result = em.createQuery("select m from JpqlMember m order by m.age desc"
+                            , JpqlMember.class)
+                    .setFirstResult(10) // 10번 부터
+                    .setMaxResults(30) // 30번 까지
+                    .getResultList();
+             */
+
+//            5. 조인
+            /*
+            JpqlTeam team = new JpqlTeam();
+            team.setName("memberA");
+            em.persist(team);
+
+            JpqlMember member = new JpqlMember();
+            member.setUsername("memberA");
+            member.setAge(10);
+            member.setTeam(team);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            // 내부 조인
+            List<JpqlMember> result = em.createQuery("select m from JpqlMember m join m.team t", JpqlMember.class)
+                    .getResultList();
+
+            // 외부 조인
+            List<JpqlMember> result2 = em.createQuery("select m from JpqlMember m left join m.team t", JpqlMember.class)
+                    .getResultList();
+
+            // 세타 조인
+            List<Long> result3 = em.createQuery("select count(m) from JpqlMember m, JpqlTeam t where m.username = t.name", Long.class)
+                    .getResultList();
+
+            // 조인 조건
+            List<JpqlMember> result4 = em.createQuery("select m from JpqlMember m left join m.team t on t.name='memberA'", JpqlMember.class)
+                    .getResultList();
+
+            System.out.println("result3.get(0).getClass() = " + result3.get(0));
+            System.out.println("result4.get(0).getUsername() = " + result4.get(0).getUsername());
+
+//            System.out.println("Integer.parseInt(result3) = " + Integer.parseInt(result3.get(0)));
+                */
+
+//            6. JPQL 타입 표현(ENUM)
+            /*
+            JpqlMember member = new JpqlMember();
+            member.setUsername("memberA");
+            member.setAge(10);
+            member.setMemberType(MemberType.ADMIN);
+            em.persist(member);
+
+            List<Object[]> result = em.createQuery("select m.username, 'Hello', true from JpqlMember m where m.memberType =: userType")
+                    .setParameter("userType", MemberType.ADMIN)
+                    .getResultList();
+
+            for (Object[] objects : result) {
+                System.out.println(objects[0]);
+                System.out.println(objects[1]);
+                System.out.println(objects[2]);
+            }
+            */
+
+//            7. JPQL 조건문
+            /*
+            JpqlMember member = new JpqlMember();
+            member.setUsername("memberA");
+            member.setAge(5);
+            em.persist(member);
+
+            JpqlMember member2 = new JpqlMember();
+            member2.setAge(7);
+            em.persist(member2);
+
+            String jpql = "select "
+                    + " case when m.age <= 10 then '학생요금'"
+                    + " when m.age > 10 then '성인 요금'"
+                    + " else '누구세요?'"
+                    + " end from JpqlMember m";
+            String result = em.createQuery(jpql, String.class)
+                    .getSingleResult();
+
+            System.out.println(result);
+
+            List<String> result2 = em.createQuery("select coalesce(m.username, '이름 없는 회원') from JpqlMember m", String.class)
+                    .getResultList();
+            for (String s : result2) {
+                System.out.println("s = " + s);
+            }
+
+            List<String> result3 = em.createQuery("select nullif(m.username, 'memberA') from JpqlMember m", String.class)
+                    .getResultList();
+            for (String s : result3) {
+                System.out.println("s = " + s);
+            }
+            */
+
+//            8. JPQL 기본 함수
+            /*
+            JpqlMember member = new JpqlMember();
+            member.setUsername("memberA");
+            member.setAge(5);
+            em.persist(member);
+
+            String jpql = "select substring(m.username, 2, 1) from JpqlMember m";
+//            String jpql = "select size(t.members) from JpqlTeam t"; // 크기를 반환
+            List<String> result = em.createQuery(jpql, String.class)
+                    .getResultList();
+
+            for (String s : result) {
+                System.out.println("s = " + s);
+            }
+            */
 
 
             tx.commit();

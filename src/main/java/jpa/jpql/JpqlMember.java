@@ -13,9 +13,16 @@ public class JpqlMember {
     private int age;
     private Address address;
 
-    @ManyToOne
+    private MemberType memberType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")
     private JpqlTeam team;
+
+    public void addTeam(JpqlTeam team){
+        this.team = team;
+        team.getMembers().add(this);
+    }
 
     public Long getId() {
         return id;
@@ -23,6 +30,15 @@ public class JpqlMember {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Enumerated(EnumType.STRING)
+    public MemberType getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(MemberType memberType) {
+        this.memberType = memberType;
     }
 
     public String getUsername() {
