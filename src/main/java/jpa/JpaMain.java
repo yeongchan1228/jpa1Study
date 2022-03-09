@@ -259,6 +259,46 @@ public class JpaMain {
             // 이런 상황에서 jpa는 old2부터 new1까지 테이블에 다시 넣는다.
             */
 
+            /**
+             * JPQL 소개 예제
+             */
+
+            /*
+            String jpql = "select m from HelloMember m where m.name like '%kim%'";
+            List<HelloMember> result = em.createQuery(jpql, HelloMember.class)
+                    .getResultList();
+             */
+
+            /**
+             * Criteria 소개 예제
+             */
+
+            /*
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<HelloMember> query = cb.createQuery(HelloMember.class);
+            Root<HelloMember> m = query.from(HelloMember.class);
+            CriteriaQuery<HelloMember> cq = query.select(m).where(cb.equal(m.get("name"), "kim"));
+            List<HelloMember> result = em.createQuery(cq).getResultList();
+            */
+
+            /**
+             * 네이티브 SQL 소개 예제
+             */
+
+            /*
+            HelloMember member = new HelloMember();
+            member.setName("SpringA");
+            em.persist(member);
+
+            // 이 전에 em.flush() 자동 실행, 단 jdbc를 사용할 경우 수동 flush를 해줘야 한다.
+            List<HelloMember> resultList = em.createNativeQuery("select * from HELLOMEMBER", HelloMember.class)
+                    .getResultList();
+
+            for (int i = 0; i < resultList.size(); i++) {
+                System.out.println(resultList.get(i).getName());
+            }
+            */
+
             tx.commit();
         }catch (Exception e){
             tx.rollback();
