@@ -1,6 +1,8 @@
 package jpa;
 
 import jpa.hellojpa.HelloMember;
+import jpa.jpql.JpqlMember;
+import jpa.jpql.JpqlTeam;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -504,6 +506,207 @@ public class JpaMain {
             }
             */
 
+//            9. 경로 표현식 -> 묵시적 조인은 사용X
+            /*
+            JpqlTeam team = new JpqlTeam();
+            team.setName("teamA");
+            em.persist(team);
+
+            JpqlMember member = new JpqlMember();
+            member.setUsername("memberA");
+            member.setAge(5);
+            member.addTeam(team);
+            em.persist(member);
+
+            // 상태 필드
+            String jpql = "select m.username from JpqlMember m";
+            List<String> resultList = em.createQuery(jpql, String.class).getResultList();
+            for (String s : resultList) {
+                System.out.println("s = " + s);
+            }
+
+            // 단일 값 경로
+            String jpql2 = "select m.team from JpqlMember m"; // 묵시적 조인이 발생하여 쿼리 튜닝이 어렵다.
+            List<JpqlTeam> resultList2 = em.createQuery(jpql2, JpqlTeam.class).getResultList();
+            for (JpqlTeam s : resultList2) {
+                System.out.println("s = " + s);
+            }
+
+//            컬렉션 값 경로
+//            String jpql3 = "select t.members from JpqlTeam t"; // 묵시적 조인이 발생 -> 사용 X, 필드 검색이 불가능
+            String jpql3 = "select m.username from JpqlTeam t join t.members m"; // 이렇게 사용한다.
+            List<String> resultList3 = em.createQuery(jpql3, String.class)
+                    .getResultList();
+            System.out.println("resultList3 = " + resultList3);
+            */
+
+//            10. 패치 조인
+
+            /*
+            JpqlTeam team = new JpqlTeam();
+            team.setName("teamA");
+            em.persist(team);
+
+            JpqlTeam team2 = new JpqlTeam();
+            team2.setName("teamB");
+            em.persist(team2);
+
+
+            JpqlMember member = new JpqlMember();
+            member.setUsername("member1");
+            member.setAge(5);
+            member.addTeam(team);
+            em.persist(member);
+
+            JpqlMember member2 = new JpqlMember();
+            member2.setUsername("member2");
+            member2.setAge(10);
+            member2.addTeam(team);
+            em.persist(member2);
+
+            JpqlMember member3 = new JpqlMember();
+            member3.setUsername("member3");
+            member3.setAge(10);
+            member3.addTeam(team2);
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+
+            *//*String jpql = "select m from JpqlMember m join fetch m.team";
+            List<JpqlMember> result = em.createQuery(jpql, JpqlMember.class)
+                    .getResultList();
+
+            for (JpqlMember jpqlMember : result) {
+                System.out.println(jpqlMember.getUsername() + ", " + jpqlMember.getTeam().getName());
+            }*//*
+
+            // 중복 제거 -> 일대다 관계는 데이터 뻥튀기가 발생할 수 있어 조심해야 한다.
+            String jpql = "select t from JpqlTeam t join fetch t.members where t.name = 'teamA'";
+            List<JpqlTeam> result = em.createQuery(jpql, JpqlTeam.class)
+                    .getResultList();
+
+            System.out.println(result.size());
+
+            String jpql2 = "select t from JpqlMember m join m.team t";
+            List<JpqlTeam> resultList = em.createQuery(jpql2, JpqlTeam.class).getResultList();
+            System.out.println("resultList = " + resultList.size());
+
+            List<MemberDto> dtoResult = em.createQuery("select new jpa.jpql.MemberDto(m.username, m.age) from JpqlMember m", MemberDto.class)
+                    .getResultList();
+            for (MemberDto memberDto : dtoResult) {
+                System.out.println("memberDto.getUsername() = " + memberDto.getUsername());
+            }
+            */
+
+//            11. 엔티티 직접 사용 -> 엔티티의 기본 키 값을 사용한 것과 동일
+
+           /*
+           JpqlTeam team = new JpqlTeam();
+            team.setName("teamA");
+            em.persist(team);
+
+            JpqlMember member = new JpqlMember();
+            member.setUsername("memberA");
+            member.addTeam(team);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            String jpql = "select m from JpqlMember m where m = :member";
+            List<JpqlMember> result = em.createQuery(jpql, JpqlMember.class)
+                    .setParameter("member", member)
+                    .getResultList();
+            for (JpqlMember jpqlMember : result) {
+                System.out.println(jpqlMember.getUsername());
+            }
+
+            String jpql2 = "select m from JpqlMember m where m.id = :memberId";
+            List<JpqlMember> result2 = em.createQuery(jpql2, JpqlMember.class)
+                    .setParameter("memberId", member.getId())
+                    .getResultList();
+            for (JpqlMember jpqlMember : result2) {
+                System.out.println(jpqlMember.getUsername());
+            }
+
+            String jpql3 = "select m from JpqlMember m where m.team = :team";
+            List<JpqlMember> result3 = em.createQuery(jpql3, JpqlMember.class)
+                    .setParameter("team", team)
+                    .getResultList();
+            for (JpqlMember jpqlMember : result3) {
+                System.out.println(jpqlMember.getTeam().getName());
+            }
+
+            String jpql4 = "select m from JpqlMember m join fetch m.team where m.team.id =: teamId";
+            List<JpqlMember> result4 = em.createQuery(jpql4, JpqlMember.class)
+                    .setParameter("teamId", team.getId())
+                    .getResultList();
+            for (JpqlMember jpqlMember : result4) {
+                System.out.println(jpqlMember.getTeam().getName());
+            }
+            */
+
+//            12. 네임드 쿼리
+
+            /*
+            JpqlTeam team = new JpqlTeam();
+            team.setName("teamA");
+            em.persist(team);
+
+            JpqlMember member = new JpqlMember();
+            member.setUsername("memberA");
+            member.addTeam(team);
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            List<JpqlMember> result = em.createNamedQuery("Member.findByUsername", JpqlMember.class)
+                    .setParameter("username", member.getUsername())
+                    .getResultList();
+
+            for (JpqlMember jpqlMember : result) {
+                System.out.println(jpqlMember.getUsername());
+            }
+            */
+
+//            13. 벌크 연산
+
+            JpqlTeam team = new JpqlTeam();
+            team.setName("teamA");
+            em.persist(team);
+
+            JpqlMember member = new JpqlMember();
+            member.setUsername("member1");
+            member.addTeam(team);
+            member.setAge(10);
+            em.persist(member);
+
+            JpqlMember member2 = new JpqlMember();
+            member2.setUsername("member2");
+            member2.addTeam(team);
+            member2.setAge(10);
+            em.persist(member2);
+
+            JpqlMember member3 = new JpqlMember();
+            member3.setUsername("member3");
+            member3.setAge(10);
+            member3.addTeam(team);
+            em.persist(member3);
+
+            int results = em.createQuery("update JpqlMember m set m.age = 20")
+                    .executeUpdate();
+            System.out.println("results = " + results); // 업데이트가 적용된 개수
+            System.out.println("member = " + member.getAge());
+
+            // 벌크 연산 후 member들의 나이를 출력하면 10으로 출력된다.
+            // 쿼리가 나가는 시점에 flush가 되지만 영속성 컨텍스트가 clear된 것은 아니기 때문에
+            // 벌크 연산 후 항상 em.clear() 영속성 컨텍스트를 초기화 한 후 DB에서 새로 조회해야 한다.
+
+            em.clear();
+            JpqlMember reFindMember = em.find(JpqlMember.class, member.getId());
+            System.out.println("reFindMember = " + reFindMember.getAge());
 
             tx.commit();
 

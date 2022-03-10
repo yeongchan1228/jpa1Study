@@ -3,6 +3,9 @@ package jpa.jpql;
 import javax.persistence.*;
 
 @Entity
+@NamedQuery(name = "Member.findByUsername", // named쿼리 -> 애플리케이션 로딩 시점에 파싱해서 문법적 오류를 체크해줌
+        query = "select m from JpqlMember m where m.username = :username"
+)
 public class JpqlMember {
 
     @Id @GeneratedValue
